@@ -93,6 +93,13 @@ struct ContentView: View {
           } label: {
             Label("Lazy Loading", systemImage: "scroll")
           }
+          NavigationLink {
+            HighlightDemoView()
+              .navigationTitle("Highlight Demo")
+              .navigationBarTitleDisplayMode(.inline)
+          } label: {
+            Label("Highlight Demo", systemImage: "highlighter")
+          }
         }
       }
       .navigationTitle("MarkdownUI")
