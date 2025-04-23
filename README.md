@@ -42,6 +42,23 @@ tvOS 16.0+, and watchOS 9.0+.
 
 ## Getting started
 
+## Highlighting text
+
+You can highlight specific strings in rendered Markdown by using the `highlightedStrings` parameter of `InlineText`.  
+Any matching substring will be highlighted with a yellow background.
+
+### Example
+
+```swift
+InlineText(inlines, highlightedStrings: ["search", "SwiftUI"])
+```
+
+This will highlight all occurrences of "search" and "SwiftUI" in the rendered Markdown.
+
+- Highlighting works for all inline text elements, including bold, italic, links, code, lists, and headings.
+- The highlight color is yellow by default.
+- If `highlightedStrings` is empty or omitted, no highlighting is applied.
+
 ### Creating a Markdown view
 
 A `Markdown` view displays rich structured text using the Markdown syntax. It can display images,
