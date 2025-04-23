@@ -19,10 +19,17 @@ extension InlineNode {
     var attributed = renderer.result.resolvingFonts()
     // ハイライト処理
     for word in highlightedStrings where !word.isEmpty {
-      var searchRange = attributed.startIndex..<attributed.endIndex
-      while let range = attributed.range(of: word, options: .caseInsensitive, range: searchRange) {
-        attributed[range].backgroundColor = .yellow
-        searchRange = range.upperBound..<attributed.endIndex
+      let plain = String(attributed.characters)
+      var searchRange = plain.startIndex..<plain.endIndex
+      while let found = plain.range(of: word, options: .caseInsensitive, range: searchRange) {
+        // AttributedString.Indexへの変換
+        if let lower = AttributedString.Index(found.lowerBound, within: attributed),
+           let upper = AttributedString.Index(found.upperBound, within: attributed) {
+          attributed[lower..<upper].backgroundColor = .yellow
+          searchRange = found.upperBound..<plain.endIndex
+        } else {
+          break
+        }
       }
     }
     return attributed
