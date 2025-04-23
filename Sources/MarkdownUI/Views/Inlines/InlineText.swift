@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct InlineText: View {
+public struct InlineText: View {
   @Environment(\.inlineImageProvider) private var inlineImageProvider
   @Environment(\.baseURL) private var baseURL
   @Environment(\.imageBaseURL) private var imageBaseURL
