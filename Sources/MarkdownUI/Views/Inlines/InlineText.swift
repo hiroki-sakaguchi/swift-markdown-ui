@@ -10,9 +10,11 @@ struct InlineText: View {
   @State private var inlineImages: [String: Image] = [:]
 
   private let inlines: [InlineNode]
+  private let highlightedStrings: [String]
 
-  init(_ inlines: [InlineNode]) {
+  init(_ inlines: [InlineNode], highlightedStrings: [String] = []) {
     self.inlines = inlines
+    self.highlightedStrings = highlightedStrings
   }
 
   var body: some View {
@@ -28,7 +30,8 @@ struct InlineText: View {
         ),
         images: self.inlineImages,
         softBreakMode: self.softBreakMode,
-        attributes: attributes
+        attributes: attributes,
+        highlightedStrings: self.highlightedStrings
       )
     }
     .task(id: self.inlines) {

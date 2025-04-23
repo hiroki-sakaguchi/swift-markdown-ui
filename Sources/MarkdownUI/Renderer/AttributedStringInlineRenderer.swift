@@ -5,16 +5,27 @@ extension InlineNode {
     baseURL: URL?,
     textStyles: InlineTextStyles,
     softBreakMode: SoftBreak.Mode,
-    attributes: AttributeContainer
+    attributes: AttributeContainer,
+    highlightedStrings: [String] = []
   ) -> AttributedString {
     var renderer = AttributedStringInlineRenderer(
       baseURL: baseURL,
       textStyles: textStyles,
       softBreakMode: softBreakMode,
-      attributes: attributes
+      attributes: attributes,
+      highlightedStrings: highlightedStrings
     )
     renderer.render(self)
-    return renderer.result.resolvingFonts()
+    var attributed = renderer.result.resolvingFonts()
+    // ハイライト処理
+    for word in highlightedStrings where !word.isEmpty {
+      var searchRange = attributed.startIndex..<attributed.endIndex
+      while let range = attributed.range(of: word, options: .caseInsensitive, range: searchRange) {
+        attributed[range].backgroundColor = .yellow
+        searchRange = range.upperBound..<attributed.endIndex
+      }
+    }
+    return attributed
   }
 }
 
@@ -25,18 +36,21 @@ private struct AttributedStringInlineRenderer {
   private let textStyles: InlineTextStyles
   private let softBreakMode: SoftBreak.Mode
   private var attributes: AttributeContainer
+  private let highlightedStrings: [String]
   private var shouldSkipNextWhitespace = false
 
   init(
     baseURL: URL?,
     textStyles: InlineTextStyles,
     softBreakMode: SoftBreak.Mode,
-    attributes: AttributeContainer
+    attributes: AttributeContainer,
+    highlightedStrings: [String] = []
   ) {
     self.baseURL = baseURL
     self.textStyles = textStyles
     self.softBreakMode = softBreakMode
     self.attributes = attributes
+    self.highlightedStrings = highlightedStrings
   }
 
   mutating func render(_ inline: InlineNode) {
